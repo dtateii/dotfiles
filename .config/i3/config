@@ -14,8 +14,8 @@ set $mod Mod1
 # Set x display scaling, primary screen
 # exec --no-startup-id xrandr --output eDP-1 --scale 1.4x1.4
 
-# Start compton for compositing / transparency support
-exec --no-startup-id compton -b --respect-prop-shadow
+# Start Picom (compton) for compositing / transparency support
+exec --no-startup-id picom --experimental-backends --backend glx -b --respect-prop-shadow
 
 # Wallpaper - restore last set
 exec --no-startup-id nitrogen --restore
