@@ -9,13 +9,13 @@
 #
 # Please see https://i3wm.org/docs/userguide.html for a complete reference!
 
-set $mod Mod1
+set $mod Mod4
 
 # Set x display scaling, primary screen
 # exec --no-startup-id xrandr --output eDP-1 --scale 1.4x1.4
 
 # Start Picom (compton) for compositing / transparency support
-exec --no-startup-id picom --experimental-backends --backend glx -b --respect-prop-shadow
+exec --no-startup-id picom --experimental-backends --backend glx -b
 
 # Wallpaper - restore last set
 exec --no-startup-id nitrogen --restore
@@ -25,7 +25,6 @@ exec --no-startup-id nm-applet
 
 # Set workspaces
 # exec --no-startup-id i3-msg 'workspace 2:Web; exec /usr/bin/firefox'
-# exec --no-startup-id i3-msg 'workspace 3
 
 # Lock screen
 # betterlockscreen uninstalled for dep conflicts.
@@ -34,26 +33,33 @@ exec --no-startup-id nm-applet
 bindsym $mod+Escape exec sh ~/.config/lock/lock
 
 # gaps
-for_window [class="^.*"] border pixel 0
+for_window [class="^.*"] border pixel 2
 # smart_gaps on
 gaps inner 12
 gaps outer 0
+
+# Window Decorations
+client.focused          #ff0000 #285577 #ffffff #2e9ef4 #774477
+#client.focused #55dd33 #bb55aa
+client.focused_inactive #ff0000 #285577 #ffffff #2e9ef4 #443344
+client.unfocused        #ff0000 #285577 #ffffff #2e9ef4 #443344
 
 # Multimedia Keys
 # Screen Brightness
 bindsym XF86MonBrightnessUp exec xbacklight -inc 5 # increase screen brightness
 bindsym XF86MonBrightnessDown exec xbacklight -dec 1 # decrease screen brightness
 # Audio Volume (Pulse)
-bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle # toggle muted
-bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5% #louder
-bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5% #quieter
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle # toggle muted
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5% #louder
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5% #quieter
 # Player controls
 bindsym XF86AudioPlay exec --no-startup-id playerctl play-pause
 bindsym XF86AudioNext exec --no-startup-id playerctl next
 bindsym XF86AudioPrev exec --no-startup-id playerctl previous
 
 # Screenshot
-bindsym $mod+Shift+p exec maim -s | xclip -selection clipboard -t image/png
+bindsym $mod+p exec maim -s | xclip -selection clipboard -t image/png
+bindsym Ctrl+Shift+4 exec maim -s -u ~/Pictures/Screenshots/$(date +%s).png
 
 # list open windows to switch to
 bindsym $mod+Tab exec rofi -show window
@@ -86,7 +92,7 @@ bindsym $mod+Shift+q kill
 # bindsym $mod+d exec dmenu_run
 # bindsym $mod+d exec j4-dmenu-desktop
 # bindsym $mod+d exec j4-dmenu-desktop --dmenu='rofi -dmenu -i'
-bindsym $mod+d exec rofi -show drun
+bindsym $mod+space exec rofi -show drun
 
 # There also is the (new) i3-dmenu-desktop which only displays applications
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
@@ -135,7 +141,8 @@ bindsym $mod+e layout toggle split
 bindsym $mod+Shift+space floating toggle
 
 # change focus between tiling / floating windows
-bindsym $mod+space focus mode_toggle
+# Removed, using for rofi instead
+#bindsym $mod+space focus mode_toggle
 
 # focus the parent container
 bindsym $mod+a focus parent
@@ -155,6 +162,16 @@ set $ws7 "7"
 set $ws8 "8"
 set $ws9 "9"
 set $ws10 "10"
+
+# Assign
+assign [class="Termite"] $ws1
+assign [class="firefox"] $ws2
+assign [class="Chromium"] $ws2
+assign [class="Google-chrome"] $ws2
+for_window [class="Code"] move to workspace $ws3
+#assign [class="spotify"] $ws10
+for_window [class="Spotify"] move to workspace $ws10
+
 
 # switch to workspace
 bindsym $mod+1 workspace $ws1
@@ -185,7 +202,7 @@ bindsym $mod+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
+bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'Exit i3 and end X session?' -B 'Yes, exit i3' 'i3-msg exit'"
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
@@ -222,3 +239,7 @@ exec_always --no-startup-id $HOME/.config/polybar/launch.sh &
 #bar {
 #        status_command i3status
 #}
+
+# Floating
+for_window [class="zoom" instance="zoom"] floating enable
+for_window [class="Pavucontrol"] floating enable

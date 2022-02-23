@@ -1,6 +1,6 @@
 [bar/top]
 padding-top = 5
-monitor = eDP-1
+monitor = ${env:MONITOR:eDP-1}
 width = 100%
 height = 32
 
@@ -20,12 +20,12 @@ font-1 = MaterialIcons:size=12;0
 font-2 = Termsynu:size=12:antialias=false;-2
 font-3 = FontAwesome:size=12;0
 
-modules-left = volume bluetooth
+modules-left = volume spotify
 modules-center = date
-modules-right = wired-network wireless-network vpn-nord powermenu
+modules-right =  bluetooth  wired-network wireless-network vpn-nord powermenu
 
 [bar/bottom]
-monitor = eDP-1
+monitor = ${env:MONITOR:eDP-1}
 bottom = true
 width = 100%
 height = 30
@@ -49,23 +49,23 @@ font-3 = RobotoCondensed:size=9;-1
 font-4 = MaterialIcons:size=11;-1
 font-5 = Termsynu:size=9:antialias=false;0
 
-modules-left = cpu memory
+modules-left = battery cpu memory
 modules-center = i3
-modules-right = backlight battery
+modules-right = backlight
 
 #xwindow powermenu
 tray-position = right
 
 [module/bluetooth]
 type = custom/script
-exec = bluetoothctl -- show | grep -q "Powered: yes" && echo "  on" || echo "%{F#899}  off%{F-}"
+exec = bluetoothctl -- show | grep -q "Powered: yes" && echo "%{F#3a8} %{F-}" || echo "%{F#666} %{F-}"
 interval = 5
 click-left = bluetoothctl -- power on
 click-right = bluetoothctl -- power off
 
 [module/vpn-nord]
 type = custom/script
-exec = nordvpn status | grep -q "Current server: " && echo "%{F#9FE}   Secure%{F-} " || echo "%{F#f66}   Not Secure %{F-}"
+exec = nordvpn status | grep -q "Current server: " && echo "%{F#009db2}   %{F-} " || echo "%{F#666}    %{F-}"
 interval = 5
 click-left = nordvpn connect
 click-right = nordvpn disconnect
@@ -81,10 +81,10 @@ type = internal/backlight
 ; $ ls -1 /sys/class/backlight/
 card = intel_backlight
 format = <label>
-;format = <ramp> <label>
+;format = <ramp>
 ; Available tokens:
 ;   %percentage% (default)
-label = " %percentage%%"
+label = "%{F#984}  %percentage%% %{F-}"
 
 ; Only applies if <ramp> is used
 ramp-0 = 🌕
@@ -119,20 +119,25 @@ bar-empty = ─
 
 [module/battery]
 type = internal/battery
-full-at = 98
+full-at = 90
 
 # format-charging = <animation-charging> <label-charging>
-format-charging =  <label-charging>
-format-discharging = <ramp-capacity> <label-discharging>
-format-full = <ramp-capacity> <label-full>
+#format-charging =  <label-charging>
+#format-discharging = <ramp-capacity> <label-discharging>
+#format-full = <ramp-capacity> <label-full>
+format-charging =   <label-charging>
+format-discharging = <ramp-capacity>
+format-full = <ramp-capacity>
 
 ramp-capacity-0 = 
-ramp-capacity-0-foreground = #f53c3c
 ramp-capacity-1 = 
-ramp-capacity-1-foreground = #ffa900
+ramp-capacity-1-foreground = #FF0044
 ramp-capacity-2 = 
+ramp-capacity-2-foreground = #FFBB55
 ramp-capacity-3 = 
+ramp-capacity-3-foreground = #7AB
 ramp-capacity-4 = 
+ramp-capacity-4-foreground = #87A
 
 bar-capacity-width = 10
 bar-capacity-format = %{+u}%{+o}%fill%%empty%%{-u}%{-o}
@@ -152,74 +157,26 @@ animation-charging-framerate = 750
 
 [module/i3]
 type = internal/i3
-
-ws-icon-0 = term;
-ws-icon-1 = web;
-ws-icon-2 = code;
-ws-icon-3 = music;
-ws-icon-4 = irssi;
-ws-icon-default = 
-# 
-
-format = <label-state> <label-mode>
-
-label-dimmed-underline = ${BAR.background}
-
-label-active = %icon%
-label-active-foreground = #ff0000
-label-active-background = #773f3f3f
-label-active-underline = #c9665e
-label-active-font = 4
-label-active-padding = 4
-
-label-occupied = %icon%
-label-occupied-foreground = #66
-label-occupied-underline = #666
-label-occupied-font = 4
-label-occupied-padding = 4
-
-label-urgent = %icon%
-label-urgent-foreground = #000000
-label-urgent-background = #bd2c40
-label-urgent-underline = #9b0a20
-label-urgent-font = 4
-label-urgent-padding = 4
-
-label-empty = %icon%
-label-empty-foreground = #555
-label-empty-font = 4
-label-empty-padding = 4
-
-label-monocle = 
-label-monocle-underline = ${module/i3.label-active-underline}
-label-monocle-background = #33ffffff
-label-monocle-padding = 2
-
-label-locked = 
-label-locked-foreground = #bd2c40
-label-locked-underline = ${module/i3.label-monocle-underline}
-label-locked-padding = ${module/i3.label-monocle-padding}
-
-label-sticky = 
-label-sticky-foreground = #fba922
-label-sticky-underline = ${module/i3.label-monocle-underline}
-label-sticky-padding = ${module/i3.label-monocle-padding}
-
-label-private = 
-label-private-foreground = #bd2c40
-label-private-underline = ${module/i3.label-monocle-underline}
-label-private-padding = ${module/i3.label-monocle-padding}
-
-[module/i3-tmp]
-type = internal/i3
 format = <label-state>
+index-sort = true
 
-label-active = 
-label-active-padding = 1
-label-occupied = 
-label-occupied-padding = 1
-label-empty = 
-label-empty-padding = 1
+label-focused            = %icon%
+label-focused-foreground = #22ffed
+label-focused-padding    = 2
+
+label-unfocused            = %icon%
+label-unfocused-foreground = #999
+label-unfocused-padding    = 2
+
+label-urgent            = %icon%
+label-urgent-foreground = #FFAA00
+label-urgent-padding    = 2S
+
+ws-icon-0 = 1;
+ws-icon-1 = 2;
+ws-icon-2 = 3;
+ws-icon-3 = 10;
+ws-icon-default = 
 
 [module/xwindow]
 type = internal/xwindow
@@ -228,21 +185,22 @@ label = %title:0:30:...%
 [module/cpu]
 type = internal/cpu
 interval = 0.5
-format = <label> <ramp-coreload>
+#format = <label> <ramp-coreload>
+format = <ramp-coreload>
 label = CPU
 
 ramp-coreload-0 = ▁
 ramp-coreload-0-font = 2
-ramp-coreload-0-foreground = #aaff77
+ramp-coreload-0-foreground = #888
 ramp-coreload-1 = ▂
 ramp-coreload-1-font = 2
-ramp-coreload-1-foreground = #aaff77
+ramp-coreload-1-foreground = #888
 ramp-coreload-2 = ▃
 ramp-coreload-2-font = 2
-ramp-coreload-2-foreground = #aaff77
+ramp-coreload-2-foreground = #888
 ramp-coreload-3 = ▄
 ramp-coreload-3-font = 2
-ramp-coreload-3-foreground = #aaff77
+ramp-coreload-3-foreground = #888
 ramp-coreload-4 = ▅
 ramp-coreload-4-font = 2
 ramp-coreload-4-foreground = #fba922
@@ -258,19 +216,20 @@ ramp-coreload-7-foreground = #ff5555
 
 [module/date]
 type = internal/date
-# date =    %%{F#fff}%I:%M %p%%{F-}  %%{F#99}%b %e%%{F-}
+# date =    %%{F#fff}%I:%M %p%%{F-}  %%{F#999}%b %e%%{F-}
 # date-alt =     %%{F#fff}%I:%M%%{F#666}:%%{F#fba922}%S%%{F-}   %%{F#fff}%A, %B %e, %Y
-date = %%{F#99}%b %e%%{F-}   %%{F#fff}%I:%M%%{F#666}
-date-alt = %%{F#fff}%A%%{F-}   %%{F#99}%B %e%%{F-}   %%{F#fff}%I:%M%%{F#666}:%%{F#77EEEE}%S%%{F-}
+date = %%{F#999}%b %e%%{F-}   %%{F#fff}%I:%M%%{F#666}
+date-alt = %%{F#6BB}%A%%{F-}   %%{F#999}%B %e%%{F-}  %%{F#fff}%I:%M%%{F#999}:%S%%{F-}
 
 [module/memory]
 type = internal/memory
-format = <label> <bar-used>
+#format = <label> <bar-used>
+format = <bar-used>
 label = RAM
 
 bar-used-width = 7
-bar-used-foreground-0 = #aaff77
-bar-used-foreground-1 = #aaff77
+bar-used-foreground-0 = #888
+bar-used-foreground-1 = #888
 bar-used-foreground-2 = #fba922
 bar-used-foreground-3 = #ff5555
 bar-used-indicator =
@@ -315,7 +274,8 @@ interface = wlo1
 interval = 3.0
 ping-interval = 10
 
-format-connected = <ramp-signal> <label-connected>
+# format-connected = <ramp-signal> <label-connected>
+format-connected = <ramp-signal>
 label-connected = %essid% %downspeed%
 label-disconnected = 
 label-disconnected-foreground = #66
@@ -362,17 +322,19 @@ expand-right = false
 
 format-spacing = 1
 
-label-open = 
-label-open-foreground = white
+label-open = 
+label-open-foreground = #ffff00
 label-close = 
-label-close-foreground = white
+label-close-foreground = #777
 label-separator = |
 label-separator-foreground = red
 
-menu-0-0 =   poweroff
+menu-0-0 = "%{F#a08}Off%{F-}"
 menu-0-0-exec = poweroff
-menu-0-1 = suspend
-menu-0-1-exec = systemctl suspend
+menu-0-1 = "%{F#97f}Out%{F-}"
+menu-0-1-exec = i3-msg exit
+menu-0-2 = "%{F#FF0}Zzz%{F-}"
+menu-0-2-exec = systemctl suspend
 
 #menu-1-0 = cancel
 #menu-1-0-exec = menu-open-0
@@ -413,5 +375,14 @@ menu-0-1-exec = systemctl suspend
 # # menu-2-1 = Cancel
 # # menu-2-1-foreground = #fba922
 # # menu-2-1-exec = menu_open-0
+
+
+[module/spotify]
+type = custom/script
+interval = 1
+format-prefix = "%{F#494} %{F#999}"
+format = <label>
+exec = python $HOME/.config/polybar/modules/polybar-spotify/spotify_status.py -f '  {artist}: {song}' -t 100
+#format-underline = #1db954
 
 ; vim:ft=dosini
